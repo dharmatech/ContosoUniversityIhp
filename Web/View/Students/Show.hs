@@ -11,6 +11,8 @@ instance View ShowView where
                 <li class="breadcrumb-item active">Show Student</li>
             </ol>
         </nav>
-        <h1>Show Student</h1>
-        <p>{student}</p>
+        <!-- <h1>Show Student</h1> -->
+        <h1>{get #firstMidName student} {get #lastName student}</h1>
+        <div>Enrollment Date: {get #enrollmentDate student}</div>
+        <!-- <p>{student}</p> -->
     |]
