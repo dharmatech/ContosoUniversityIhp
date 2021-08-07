@@ -16,7 +16,7 @@ instance View IndexView where
                 <thead>
                     <tr>
                         <th>Student</th>
-                        <th></th>
+                        <!-- <th></th> -->
                         <th></th>
                         <th></th>
                     </tr>
@@ -26,13 +26,51 @@ instance View IndexView where
         </div>
     |]
 
-
 renderStudent :: Student -> Html
 renderStudent student = [hsx|
     <tr>
-        <td>{student}</td>
-        <td><a href={ShowStudentAction (get #id student)}>Show</a></td>
+        <!-- <td>{student}</td> -->
+
+        <td>
+            <a href={ShowStudentAction (get #id student)}>
+                {get #firstMidName student} {get #lastName student}
+            </a>
+        </td>
+
+        <!-- <td><a href={ShowStudentAction (get #id student)}>Show</a></td> -->
+
         <td><a href={EditStudentAction (get #id student)} class="text-muted">Edit</a></td>
         <td><a href={DeleteStudentAction (get #id student)} class="js-delete text-muted">Delete</a></td>
     </tr>
 |]
+
+-- Keeping th and td data together.
+
+-- [
+--    ("Student", (\student -> EditStudentAction (get #id student)))
+--] 
+
+-- [
+--     (
+--         [hsx|<th>Student</th>|], 
+-- 
+--         (\student ->
+--             [hsx|
+--                 <a href={ShowStudentAction (get #id student)}>
+--                     {get #firstMidName student} {get #lastName student}
+--                 </a>            
+--             |])
+--     ),
+--     
+--     (
+--         [hsx|<th></th>|], 
+-- 
+--         (\student ->
+--             [hsx|
+--                 <a href={EditStudentAction (get #id student)} class="text-muted">Edit</a>
+--             |])
+--     ),
+-- 
+--     ...
+-- 
+-- ]
