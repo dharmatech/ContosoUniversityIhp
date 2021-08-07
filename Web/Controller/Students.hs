@@ -72,3 +72,5 @@ instance Controller StudentsController where
 
 buildStudent student = student
     |> fill @["lastName","firstMidName","enrollmentDate"]
+    |> validateField #firstMidName nonEmpty
+    |> validateField #lastName     nonEmpty
