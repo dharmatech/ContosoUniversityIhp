@@ -7,13 +7,25 @@ import Web.View.Students.Edit
 import Web.View.Students.Show
 
 instance Controller StudentsController where
-    action StudentsAction = do
+
+    -- action StudentsAction = do
+    --     students <- query @Student |> fetch
+    --     render IndexView { .. }
+    --     -- render IndexView students
+    --     -- render IndexView { students }
+    --     -- render (IndexView students)
+    --     -- render $ IndexView students
+
+    action StudentsAction { sortOrder } = do
+
+        putStrLn ("sortOrder: " <> tshow sortOrder)
+
         students <- query @Student |> fetch
         render IndexView { .. }
-        -- render IndexView students
-        -- render IndexView { students }
-        -- render (IndexView students)
-        -- render $ IndexView students
+
+    -- action StudentsAction { sortOrder } = do
+    --     students <- query @Student |> fetch
+    --     render IndexView { .. }
 
     action NewStudentAction = do
         let student = newRecord
@@ -62,13 +74,13 @@ instance Controller StudentsController where
                 Right student -> do
                     student <- student |> createRecord
                     setSuccessMessage "Student created"
-                    redirectTo StudentsAction
+                    redirectTo (StudentsAction Nothing)
 
     action DeleteStudentAction { studentId } = do
         student <- fetch studentId
         deleteRecord student
         setSuccessMessage "Student deleted"
-        redirectTo StudentsAction
+        redirectTo (StudentsAction Nothing)
 
 buildStudent student = student
     |> fill @["lastName","firstMidName","enrollmentDate"]

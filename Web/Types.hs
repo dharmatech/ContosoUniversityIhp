@@ -9,8 +9,12 @@ data WebApplication = WebApplication deriving (Eq, Show)
 
 data StaticController = WelcomeAction deriving (Eq, Show, Data)
 
+-- data SortOrder = NameAsc | NameDsc | DateAsc | DateDesc | SortNone deriving (Eq, Show, Data)
+
 data StudentsController
-    = StudentsAction
+    -- = StudentsAction
+    -- = StudentsAction { sortOrder :: SortOrder }
+    = StudentsAction { sortOrder :: Maybe Text }
     | NewStudentAction
     | ShowStudentAction { studentId :: !(Id Student) }
     | CreateStudentAction
