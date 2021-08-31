@@ -4,7 +4,8 @@ import Web.View.Prelude
 data StudentsIndexModel = StudentsIndexModel { 
     students :: [Student], 
     currentSort :: Maybe Text, 
-    nameSort :: Maybe Text }
+    nameSort :: Maybe Text,
+    dateSort :: Maybe Text }
 
 data IndexView = IndexView { model :: StudentsIndexModel }
 
@@ -22,10 +23,20 @@ instance View IndexView where
                     <tr>
                         <th>
                             <a href={StudentsAction (get #nameSort model)}>
-                                Student
+                                Last Name
                             </a>
                         </th>
-                        <!-- <th></th> -->
+                        
+                        <th>
+                            First Name
+                        </th>
+
+                        <th>
+                            <a href={StudentsAction (get #dateSort model)}>
+                                Enrollment Date
+                            </a>
+                        </th>
+
                         <th></th>
                         <th></th>
                     </tr>
@@ -38,20 +49,45 @@ instance View IndexView where
 renderStudent :: Student -> Html
 renderStudent student = [hsx|
     <tr>
-        <!-- <td>{student}</td> -->
-
         <td>
             <a href={ShowStudentAction (get #id student)}>
-                {get #firstMidName student} {get #lastName student}
+                {get #lastName student}
             </a>
         </td>
 
-        <!-- <td><a href={ShowStudentAction (get #id student)}>Show</a></td> -->
+        <td>
+            {get #firstMidName student}
+        </td>
 
-        <td><a href={EditStudentAction (get #id student)} class="text-muted">Edit</a></td>
-        <td><a href={DeleteStudentAction (get #id student)} class="js-delete text-muted">Delete</a></td>
+        <td>
+            {get #enrollmentDate student}
+        </td>
+        
+        <td>
+            <a href={EditStudentAction (get #id student)} class="text-muted">Edit</a> | 
+            <a href={DeleteStudentAction (get #id student)} class="js-delete text-muted">Delete</a>
+        </td>
+        
     </tr>
 |]
+
+-- renderStudent :: Student -> Html
+-- renderStudent student = [hsx|
+--     <tr>
+--         <!-- <td>{student}</td> -->
+-- 
+--         <td>
+--             <a href={ShowStudentAction (get #id student)}>
+--                 {get #firstMidName student} {get #lastName student}
+--             </a>
+--         </td>
+-- 
+--         <!-- <td><a href={ShowStudentAction (get #id student)}>Show</a></td> -->
+-- 
+--         <td><a href={EditStudentAction (get #id student)} class="text-muted">Edit</a></td>
+--         <td><a href={DeleteStudentAction (get #id student)} class="js-delete text-muted">Delete</a></td>
+--     </tr>
+-- |]
 
 -- Keeping th and td data together.
 

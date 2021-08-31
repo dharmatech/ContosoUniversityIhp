@@ -13,12 +13,16 @@ instance Controller StudentsController where
         let currentSort = sortOrder
         
         let nameSort = case sortOrder of
-                (Just "NameAsc") -> "NameDsc"
-                _                -> "NameAsc"
+                            (Just "NameAsc") -> "NameDsc"
+                            _                -> "NameAsc"
+
+        let dateSort = case sortOrder of
+                            (Just "DateAsc") -> "DateDsc"
+                            _                -> "DateAsc"
          
         students <- query @Student |> fetch
         
-        render (IndexView (StudentsIndexModel students currentSort nameSort))
+        render (IndexView (StudentsIndexModel students currentSort nameSort dateSort))
 
     action NewStudentAction = do
         let student = newRecord
