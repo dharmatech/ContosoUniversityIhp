@@ -31,10 +31,16 @@ instance Controller StudentsController where
 
         let currentSort = sortOrder
 
+        -- let nameSort = if sortOrder == "NameAsc" then "NameDsc" else "NameAsc"
+
+        let nameSort = case sortOrder of
+                (Just "NameAsc") -> "NameDsc"
+                _                -> "NameAsc"
+         
         students <- query @Student |> fetch
         -- render IndexView { .. }
         -- render IndexView { students = students, sortOrder = sortOrder }
-        render (IndexView (StudentsIndexModel students currentSort))
+        render (IndexView (StudentsIndexModel students currentSort nameSort))
 
     -- action StudentsAction { sortOrder } = do
     --     students <- query @Student |> fetch
