@@ -1,9 +1,10 @@
 module Web.View.Students.Index where
 import Web.View.Prelude
 
--- data IndexView = IndexView { students :: [Student], sortOrder :: Maybe Text }
-
-data StudentsIndexModel = StudentsIndexModel { students :: [Student], currentSort :: Maybe Text, nameSort :: Maybe Text }
+data StudentsIndexModel = StudentsIndexModel { 
+    students :: [Student], 
+    currentSort :: Maybe Text, 
+    nameSort :: Maybe Text }
 
 data IndexView = IndexView { model :: StudentsIndexModel }
 
@@ -20,16 +21,9 @@ instance View IndexView where
                 <thead>
                     <tr>
                         <th>
-                            <a href="/Students">
-                                Student
-                            </a>
-
                             <a href={StudentsAction (get #nameSort model)}>
                                 Student
                             </a>
-
-
-
                         </th>
                         <!-- <th></th> -->
                         <th></th>
