@@ -16,12 +16,25 @@ instance Controller StudentsController where
     --     -- render (IndexView students)
     --     -- render $ IndexView students
 
+    -- action StudentsAction { sortOrder } = do
+
+    --     putStrLn ("sortOrder: " <> tshow sortOrder)
+
+    --     let currentSort = sortOrder
+
+    --     students <- query @Student |> fetch
+    --     -- render IndexView { .. }
+    --     render IndexView { students = students, sortOrder = sortOrder }
+
+
     action StudentsAction { sortOrder } = do
 
-        putStrLn ("sortOrder: " <> tshow sortOrder)
+        let currentSort = sortOrder
 
         students <- query @Student |> fetch
-        render IndexView { .. }
+        -- render IndexView { .. }
+        -- render IndexView { students = students, sortOrder = sortOrder }
+        render (IndexView (StudentsIndexModel students currentSort))
 
     -- action StudentsAction { sortOrder } = do
     --     students <- query @Student |> fetch
