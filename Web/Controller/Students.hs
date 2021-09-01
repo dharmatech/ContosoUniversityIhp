@@ -30,15 +30,15 @@ instance Controller StudentsController where
                             _       -> Just 1
          
         let _currentFilter = searchString'
-
-        
-
-        -- students <- query @Student |> fetch
-
+                
         students <- case searchString' of
-                        Nothing -> query @Student |> fetch
-                        (Just str)       -> query @Student |> filterWhereLike (#lastName, "%" <> str <> "%") |> fetch
-        
+            Nothing -> query @Student |> fetch
+            (Just str) -> query @Student 
+                |> queryOr
+                    (filterWhereILike (#lastName, "%" <> str <> "%"))
+                    (filterWhereILike (#firstMidName, "%" <> str <> "%"))
+                |> fetch        
+
         render (IndexView (StudentsIndexModel students currentSort nameSort dateSort _currentFilter))
 
     action NewStudentAction = do
