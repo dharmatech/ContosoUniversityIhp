@@ -1,8 +1,38 @@
 module Web.View.Students.Index where
 import Web.View.Prelude
 
+----------------------------------------------------------------------
+data PaginatedList = PaginatedList {
+    items :: [Student],
+    pageIndex :: Int,
+    totalPages :: Int    
+}
+
+hasPreviousPage :: PaginatedList -> Bool
+hasPreviousPage ls = get #pageIndex ls > 1
+
+hasNextPage :: PaginatedList -> Bool
+hasNextPage ls = get #pageIndex ls < get #totalPages ls
+
+newPaginatedList :: [Student] -> Int -> Int -> Int -> PaginatedList
+newPaginatedList items count pageIndex pageSize =
+    PaginatedList {
+        items = items,
+        pageIndex = pageIndex,
+        totalPages = ceiling (fromIntegral count / fromIntegral pageSize)
+    }
+
+createPaginatedList :: [Student] -> Int -> Int -> PaginatedList
+createPaginatedList source pageIndex pageSize =
+    let
+        count = length source
+        items = take pageSize (drop ((pageIndex - 1) * pageSize) source)
+    in
+        newPaginatedList items count pageIndex pageSize
+----------------------------------------------------------------------
 data StudentsIndexModel = StudentsIndexModel { 
-    students :: [Student], 
+    -- students :: [Student], 
+    students :: PaginatedList, 
     currentSort :: Maybe Text, 
     nameSort :: Maybe Text,
     dateSort :: Maybe Text,
@@ -10,8 +40,18 @@ data StudentsIndexModel = StudentsIndexModel {
 
 data IndexView = IndexView { model :: StudentsIndexModel }
 
+-- abc :: StudentsIndexModel -> [Student]
+-- abc m =
+--     get #items (get #students m)
+
 instance View IndexView where
-    html IndexView { .. } = [hsx|
+    html IndexView { .. } = 
+        
+        let ls = (get #items (get #students model))
+
+        in
+              
+        [hsx|
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item active">
@@ -50,7 +90,7 @@ instance View IndexView where
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>{forEach (get #students model) renderStudent}</tbody>
+                <tbody>{forEach ls renderStudent}</tbody>
             </table>
         </div>
     |]

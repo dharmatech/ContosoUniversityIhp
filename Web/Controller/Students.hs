@@ -39,7 +39,38 @@ instance Controller StudentsController where
                     (filterWhereILike (#firstMidName, "%" <> str <> "%"))
                 |> fetch        
 
-        render (IndexView (StudentsIndexModel students currentSort nameSort dateSort _currentFilter))
+        -- let queryBuilder = case searchString' of
+        --                     Nothing -> query @Student
+        --                     (Just str) -> query @Student 
+        --                         |> queryOr
+        --                             (filterWhereILike (#lastName, "%" <> str <> "%"))
+        --                             (filterWhereILike (#firstMidName, "%" <> str <> "%"))   
+
+        -- students <- case sortOrder of
+        --                 (Just "NameAsc") -> queryBuilder |> orderByAsc  #lastName |> fetch
+        --                 (Just "NameDsc") -> queryBuilder |> orderByDesc #lastName |> fetch
+        --                 (Just "DateAsc") -> queryBuilder |> orderByAsc  #enrollmentDate |> fetch
+        --                 (Just "DateDsc") -> queryBuilder |> orderByDesc #enrollmentDate |> fetch
+        --                 Nothing -> queryBuilder |> orderByAsc #lastName |> fetch
+        --                 _ -> queryBuilder |> orderByAsc #lastName |> fetch
+
+        let pageIndex' = case pageIndex of
+                Nothing -> 1
+                (Just n) -> n
+
+        let ls = createPaginatedList students pageIndex' 4
+                  
+
+          
+
+        -- let students' = students |> orderBy #lastName
+
+        -- students' <- case sortOrder of
+        --     (Just "NameAsc") -> students |> orderBy #lastName
+
+        -- render (IndexView (StudentsIndexModel students currentSort nameSort dateSort _currentFilter))
+
+        render (IndexView (StudentsIndexModel ls currentSort nameSort dateSort _currentFilter))
 
     action NewStudentAction = do
         let student = newRecord
