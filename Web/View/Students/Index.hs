@@ -5,7 +5,8 @@ data StudentsIndexModel = StudentsIndexModel {
     students :: [Student], 
     currentSort :: Maybe Text, 
     nameSort :: Maybe Text,
-    dateSort :: Maybe Text }
+    dateSort :: Maybe Text,
+    _currentFilter :: Maybe Text }
 
 data IndexView = IndexView { model :: StudentsIndexModel }
 
@@ -13,7 +14,9 @@ instance View IndexView where
     html IndexView { .. } = [hsx|
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href={StudentsAction Nothing}>Students</a></li>
+                <li class="breadcrumb-item active">
+                    <a href={StudentsAction Nothing Nothing Nothing Nothing}>Students</a>
+                </li>
             </ol>
         </nav>
         <h1>Index <a href={pathTo NewStudentAction} class="btn btn-primary ml-4">+ New</a></h1>
@@ -21,18 +24,24 @@ instance View IndexView where
             <table class="table">
                 <thead>
                     <tr>
-                        <th>
-                            <a href={StudentsAction (get #nameSort model)}>
+                        <th>                            
+                            <a href={StudentsAction 
+                                        (get #nameSort model) 
+                                        (get #_currentFilter model) 
+                                        Nothing 
+                                        Nothing}>
                                 Last Name
                             </a>
                         </th>
                         
-                        <th>
-                            First Name
-                        </th>
+                        <th>First Name</th>
 
                         <th>
-                            <a href={StudentsAction (get #dateSort model)}>
+                            <a href={StudentsAction 
+                                        (get #dateSort model) 
+                                        (get #_currentFilter model) 
+                                        Nothing 
+                                        Nothing}>
                                 Enrollment Date
                             </a>
                         </th>
@@ -70,52 +79,3 @@ renderStudent student = [hsx|
         
     </tr>
 |]
-
--- renderStudent :: Student -> Html
--- renderStudent student = [hsx|
---     <tr>
---         <!-- <td>{student}</td> -->
--- 
---         <td>
---             <a href={ShowStudentAction (get #id student)}>
---                 {get #firstMidName student} {get #lastName student}
---             </a>
---         </td>
--- 
---         <!-- <td><a href={ShowStudentAction (get #id student)}>Show</a></td> -->
--- 
---         <td><a href={EditStudentAction (get #id student)} class="text-muted">Edit</a></td>
---         <td><a href={DeleteStudentAction (get #id student)} class="js-delete text-muted">Delete</a></td>
---     </tr>
--- |]
-
--- Keeping th and td data together.
-
--- [
---    ("Student", (\student -> EditStudentAction (get #id student)))
---] 
-
--- [
---     (
---         [hsx|<th>Student</th>|], 
--- 
---         (\student ->
---             [hsx|
---                 <a href={ShowStudentAction (get #id student)}>
---                     {get #firstMidName student} {get #lastName student}
---                 </a>            
---             |])
---     ),
---     
---     (
---         [hsx|<th></th>|], 
--- 
---         (\student ->
---             [hsx|
---                 <a href={EditStudentAction (get #id student)} class="text-muted">Edit</a>
---             |])
---     ),
--- 
---     ...
--- 
--- ]

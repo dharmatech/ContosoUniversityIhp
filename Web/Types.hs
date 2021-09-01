@@ -12,7 +12,7 @@ data StaticController = WelcomeAction deriving (Eq, Show, Data)
 -- data SortOrder = NameAsc | NameDsc | DateAsc | DateDesc | SortNone deriving (Eq, Show, Data)
 
 data StudentsController
-    = StudentsAction { sortOrder :: Maybe Text }
+    = StudentsAction { sortOrder :: Maybe Text, currentFilter :: Maybe Text, searchString :: Maybe Text, pageIndex :: Maybe Int }
     | NewStudentAction
     | ShowStudentAction { studentId :: !(Id Student) }
     | CreateStudentAction

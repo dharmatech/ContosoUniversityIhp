@@ -7,7 +7,7 @@ instance View NewView where
     html NewView { .. } = [hsx|
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href={StudentsAction Nothing}>Students</a></li>
+                <li class="breadcrumb-item"><a href={StudentsAction Nothing Nothing Nothing Nothing}>Students</a></li>
                 <li class="breadcrumb-item active">New Student</li>
             </ol>
         </nav>

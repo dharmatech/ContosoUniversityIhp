@@ -8,21 +8,38 @@ import Web.View.Students.Show
 
 instance Controller StudentsController where
 
-    action StudentsAction { sortOrder } = do
+    action StudentsAction { sortOrder, currentFilter, searchString, pageIndex } = do
 
         let currentSort = sortOrder
         
         let nameSort = case sortOrder of
+                            Nothing          -> "NameDsc"
                             (Just "NameAsc") -> "NameDsc"
                             _                -> "NameAsc"
 
         let dateSort = case sortOrder of
                             (Just "DateAsc") -> "DateDsc"
                             _                -> "DateAsc"
+
+        let searchString' = case searchString of
+                                Nothing -> currentFilter
+                                _       -> searchString
+
+        let pageIndex' = case searchString of
+                            Nothing -> pageIndex
+                            _       -> Just 1
          
-        students <- query @Student |> fetch
+        let _currentFilter = searchString'
+
         
-        render (IndexView (StudentsIndexModel students currentSort nameSort dateSort))
+
+        -- students <- query @Student |> fetch
+
+        students <- case searchString' of
+                        Nothing -> query @Student |> fetch
+                        (Just str)       -> query @Student |> filterWhereLike (#lastName, "%" <> str <> "%") |> fetch
+        
+        render (IndexView (StudentsIndexModel students currentSort nameSort dateSort _currentFilter))
 
     action NewStudentAction = do
         let student = newRecord
@@ -71,13 +88,13 @@ instance Controller StudentsController where
                 Right student -> do
                     student <- student |> createRecord
                     setSuccessMessage "Student created"
-                    redirectTo (StudentsAction Nothing)
+                    redirectTo (StudentsAction Nothing Nothing Nothing Nothing)
 
     action DeleteStudentAction { studentId } = do
         student <- fetch studentId
         deleteRecord student
         setSuccessMessage "Student deleted"
-        redirectTo (StudentsAction Nothing)
+        redirectTo (StudentsAction Nothing Nothing Nothing Nothing)
 
 buildStudent student = student
     |> fill @["lastName","firstMidName","enrollmentDate"]
