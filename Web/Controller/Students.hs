@@ -9,9 +9,7 @@ import Web.View.Students.Show
 instance Controller StudentsController where
 
     action StudentsAction { sortOrder, currentFilter, searchString, pageIndex } = do
-
-        let currentSort = sortOrder
-        
+                
         let nameSort = case sortOrder of
                             Nothing          -> "NameDsc"
                             (Just "NameAsc") -> "NameDsc"
@@ -28,8 +26,6 @@ instance Controller StudentsController where
         let pageIndex' = case searchString of
                             Nothing -> pageIndex
                             _       -> Just 1
-         
-        let _currentFilter = searchString'
                 
         students <- case searchString' of
             Nothing -> query @Student |> fetch
@@ -58,19 +54,20 @@ instance Controller StudentsController where
                 Nothing -> 1
                 (Just n) -> n
 
-        let ls = createPaginatedList students pageIndex' 4
-                  
-
-          
-
+        -- let ls = createPaginatedList students pageIndex' 4
+        
         -- let students' = students |> orderBy #lastName
 
         -- students' <- case sortOrder of
         --     (Just "NameAsc") -> students |> orderBy #lastName
-
-        -- render (IndexView (StudentsIndexModel students currentSort nameSort dateSort _currentFilter))
-
-        render (IndexView (StudentsIndexModel ls currentSort nameSort dateSort _currentFilter))
+                
+        render (IndexView (StudentsIndexModel {
+            students = createPaginatedList students pageIndex' 4,
+            currentSort = sortOrder,
+            nameSort = nameSort,
+            dateSort = dateSort,
+            _currentFilter = searchString'
+            }))
 
     action NewStudentAction = do
         let student = newRecord

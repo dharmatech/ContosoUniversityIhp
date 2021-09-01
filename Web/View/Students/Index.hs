@@ -14,21 +14,32 @@ hasPreviousPage ls = get #pageIndex ls > 1
 hasNextPage :: PaginatedList -> Bool
 hasNextPage ls = get #pageIndex ls < get #totalPages ls
 
-newPaginatedList :: [Student] -> Int -> Int -> Int -> PaginatedList
-newPaginatedList items count pageIndex pageSize =
-    PaginatedList {
-        items = items,
-        pageIndex = pageIndex,
-        totalPages = ceiling (fromIntegral count / fromIntegral pageSize)
-    }
+-- newPaginatedList :: [Student] -> Int -> Int -> Int -> PaginatedList
+-- newPaginatedList items count pageIndex pageSize =
+--     PaginatedList {
+--         items = items,
+--         pageIndex = pageIndex,
+--         totalPages = ceiling (fromIntegral count / fromIntegral pageSize)
+--     }
+
+-- createPaginatedList :: [Student] -> Int -> Int -> PaginatedList
+-- createPaginatedList source pageIndex pageSize =
+--     let
+--         count = length source
+--         items = take pageSize (drop ((pageIndex - 1) * pageSize) source)
+--     in
+--         newPaginatedList items count pageIndex pageSize
 
 createPaginatedList :: [Student] -> Int -> Int -> PaginatedList
 createPaginatedList source pageIndex pageSize =
     let
         count = length source
-        items = take pageSize (drop ((pageIndex - 1) * pageSize) source)
     in
-        newPaginatedList items count pageIndex pageSize
+        PaginatedList {
+            items = take pageSize (drop ((pageIndex - 1) * pageSize) source),
+            pageIndex = pageIndex,
+            totalPages = ceiling (fromIntegral count / fromIntegral pageSize)
+        }
 ----------------------------------------------------------------------
 data StudentsIndexModel = StudentsIndexModel { 
     -- students :: [Student], 
@@ -47,8 +58,12 @@ data IndexView = IndexView { model :: StudentsIndexModel }
 instance View IndexView where
     html IndexView { .. } = 
         
-        let ls = (get #items (get #students model))
-
+        let 
+            ls = get #items (get #students model)
+            prevPageIndex =  Just (get #pageIndex (get #students model) - 1)
+            nextPageIndex =  Just (get #pageIndex (get #students model) + 1)
+            prevDisabled = (if hasPreviousPage (get #students model) then "" else "disabled") :: Text
+            nextDisabled = (if hasNextPage (get #students model) then "" else "disabled") :: Text
         in
               
         [hsx|
@@ -93,6 +108,26 @@ instance View IndexView where
                 <tbody>{forEach ls renderStudent}</tbody>
             </table>
         </div>
+
+        <a href={StudentsAction 
+                    (get #currentSort model)
+                    (get #_currentFilter model)
+                    Nothing
+                    prevPageIndex}
+            class={"btn btn-primary " <> prevDisabled}
+                    >
+            Previous
+        </a>
+
+        <a href={StudentsAction 
+                    (get #currentSort model)
+                    (get #_currentFilter model)
+                    Nothing
+                    nextPageIndex}
+            class={"btn btn-primary " <> nextDisabled}
+                    >
+            Next
+        </a>
     |]
 
 renderStudent :: Student -> Html
