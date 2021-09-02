@@ -55,6 +55,11 @@ data IndexView = IndexView { model :: StudentsIndexModel }
 -- abc m =
 --     get #items (get #students m)
 
+-- renderForm :: Student -> Html
+-- renderForm student = formFor student [hsx|
+    
+-- |]
+
 instance View IndexView where
     html IndexView { .. } = 
         
@@ -74,7 +79,28 @@ instance View IndexView where
                 </li>
             </ol>
         </nav>
-        <h1>Index <a href={pathTo NewStudentAction} class="btn btn-primary ml-4">+ New</a></h1>
+
+        <h1>
+            Index 
+            <a href={pathTo NewStudentAction} class="btn btn-primary ml-4">
+                + New
+            </a>
+        </h1>
+
+        <form method="get" action="/Students">
+            <div class="form-actions no-color">
+                <p>
+                    Find by name:
+                    <input type="text" name="searchString" />
+                    <input type="submit" value="Search" class="btn btn-primary" />
+                     | 
+                    <a href={StudentsAction Nothing Nothing Nothing Nothing}>
+                        Back to full list
+                    </a>
+                </p>
+            </div>
+        </form>
+
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -118,7 +144,7 @@ instance View IndexView where
                     >
             Previous
         </a>
-
+        
         <a href={StudentsAction 
                     (get #currentSort model)
                     (get #_currentFilter model)

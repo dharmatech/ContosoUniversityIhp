@@ -26,14 +26,14 @@ instance Controller StudentsController where
         let pageIndex' = case searchString of
                             Nothing -> pageIndex
                             _       -> Just 1
-                
-        students <- case searchString' of
-            Nothing -> query @Student |> fetch
-            (Just str) -> query @Student 
-                |> queryOr
-                    (filterWhereILike (#lastName, "%" <> str <> "%"))
-                    (filterWhereILike (#firstMidName, "%" <> str <> "%"))
-                |> fetch        
+                        
+        -- students <- case searchString' of
+        --     Nothing -> query @Student |> fetch
+        --     (Just str) -> query @Student 
+        --         |> queryOr
+        --             (filterWhereILike (#lastName, "%" <> str <> "%"))
+        --             (filterWhereILike (#firstMidName, "%" <> str <> "%"))
+        --         |> fetch        
 
         -- let queryBuilder = case searchString' of
         --                     Nothing -> query @Student
@@ -50,7 +50,56 @@ instance Controller StudentsController where
         --                 Nothing -> queryBuilder |> orderByAsc #lastName |> fetch
         --                 _ -> queryBuilder |> orderByAsc #lastName |> fetch
 
-        let pageIndex' = case pageIndex of
+        students <- case searchString' of
+
+            Nothing -> query @Student 
+                |> (case sortOrder of
+                        (Just "NameAsc") -> orderByAsc #lastName
+                        (Just "NameDsc") -> orderByDesc #lastName
+                        (Just "DateAsc") -> orderByAsc  #enrollmentDate
+                        (Just "DateDsc") -> orderByDesc #enrollmentDate
+                        Nothing -> orderByAsc #lastName
+                        _ -> orderByAsc #lastName)
+                |> fetch
+
+            (Just str) -> query @Student 
+                |> queryOr
+                    (filterWhereILike (#lastName, "%" <> str <> "%"))
+                    (filterWhereILike (#firstMidName, "%" <> str <> "%"))
+                |> (case sortOrder of
+                        (Just "NameAsc") -> orderByAsc #lastName
+                        (Just "NameDsc") -> orderByDesc #lastName
+                        (Just "DateAsc") -> orderByAsc  #enrollmentDate
+                        (Just "DateDsc") -> orderByDesc #enrollmentDate
+                        Nothing -> orderByAsc #lastName
+                        _ -> orderByAsc #lastName)
+                |> fetch    
+
+
+
+
+        -- let sortClause q = (case sortOrder of
+        --                     (Just "NameAsc") -> orderByAsc #lastName
+        --                     (Just "NameDsc") -> orderByDesc #lastName
+        --                     (Just "DateAsc") -> orderByAsc  #enrollmentDate
+        --                     (Just "DateDsc") -> orderByDesc #enrollmentDate
+        --                     Nothing -> orderByAsc #lastName
+        --                     _ -> orderByAsc #lastName)                
+
+        -- students <- case searchString' of
+
+        --     Nothing -> query @Student 
+        --         |> sortClause (query @Student)
+        --         |> fetch
+
+        --     (Just str) -> query @Student 
+        --         |> queryOr
+        --             (filterWhereILike (#lastName, "%" <> str <> "%"))
+        --             (filterWhereILike (#firstMidName, "%" <> str <> "%"))
+        --         |> sortClause (query @Student)
+        --         |> fetch    
+
+        let pageIndex'' = case pageIndex' of
                 Nothing -> 1
                 (Just n) -> n
 
@@ -62,7 +111,7 @@ instance Controller StudentsController where
         --     (Just "NameAsc") -> students |> orderBy #lastName
                 
         render (IndexView (StudentsIndexModel {
-            students = createPaginatedList students pageIndex' 4,
+            students = createPaginatedList students pageIndex'' 4,
             currentSort = sortOrder,
             nameSort = nameSort,
             dateSort = dateSort,
