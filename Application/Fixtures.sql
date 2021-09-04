@@ -16,6 +16,9 @@ SET SESSION AUTHORIZATION DEFAULT;
 
 ALTER TABLE public.instructors DISABLE TRIGGER ALL;
 
+INSERT INTO public.instructors (id, last_name, first_mid_name, hire_date) VALUES ('c7e7a324-e9ad-415e-b27b-e0adcf35f2b1', 'Curry', 'Haskell', '1920-01-01');
+INSERT INTO public.instructors (id, last_name, first_mid_name, hire_date) VALUES ('01f51f0a-e7c8-4ad6-93c0-05a937e54393', 'Church', 'Alonzo', '1930-01-01');
+INSERT INTO public.instructors (id, last_name, first_mid_name, hire_date) VALUES ('362d6021-3871-415b-951d-22c20b0b2f93', 'Backus', 'John', '1940-01-01');
 
 
 ALTER TABLE public.instructors ENABLE TRIGGER ALL;
