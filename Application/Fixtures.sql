@@ -14,6 +14,13 @@ SET row_security = off;
 
 SET SESSION AUTHORIZATION DEFAULT;
 
+ALTER TABLE public.instructors DISABLE TRIGGER ALL;
+
+
+
+ALTER TABLE public.instructors ENABLE TRIGGER ALL;
+
+
 ALTER TABLE public.students DISABLE TRIGGER ALL;
 
 INSERT INTO public.students (id, last_name, first_mid_name, enrollment_date) VALUES ('6e8d5f3b-6c5f-43eb-bfad-eef7def28b3d', 'Torvalds', 'Linus', '1858-11-17');

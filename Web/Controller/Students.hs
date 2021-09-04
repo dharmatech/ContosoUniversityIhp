@@ -84,6 +84,39 @@ instance Controller StudentsController where
 
         -- let queryB = query @Student |> queryOr (filterWhereILike (#lastName, "%" <> "abc" <> "%")) (filterWhereILike (#firstMidName, "%" <> "xyz" <> "%"))
 
+
+
+        -- let sortClause q = (case sortOrder of
+        --                     (Just "NameAsc") -> orderByAsc #lastName
+        --                     (Just "NameDsc") -> orderByDesc #lastName
+        --                     (Just "DateAsc") -> orderByAsc  #enrollmentDate
+        --                     (Just "DateDsc") -> orderByDesc #enrollmentDate
+        --                     Nothing -> orderByAsc #lastName
+        --                     _ -> orderByAsc #lastName)                
+
+        -- students <- case searchString' of
+
+        --     Nothing -> query @Student 
+        --         |> queryOr
+        --             (filterWhereILike (#lastName, "%"))
+        --             (filterWhereILike (#firstMidName, "%"))
+        --         |> sortClause (query @Student)
+        --         |> fetch
+
+        --     (Just str) -> query @Student 
+        --         |> queryOr
+        --             (filterWhereILike (#lastName, "%" <> str <> "%"))
+        --             (filterWhereILike (#firstMidName, "%" <> str <> "%"))
+        --         |> sortClause (query @Student)
+        --         |> fetch    
+
+        -- let pageIndex'' = case pageIndex' of
+        --         Nothing -> 1
+        --         (Just n) -> n
+
+
+
+
         let sortClause q = (case sortOrder of
                             (Just "NameAsc") -> orderByAsc #lastName
                             (Just "NameDsc") -> orderByDesc #lastName
@@ -95,9 +128,6 @@ instance Controller StudentsController where
         students <- case searchString' of
 
             Nothing -> query @Student 
-                |> queryOr
-                    (filterWhereILike (#lastName, "%"))
-                    (filterWhereILike (#firstMidName, "%"))
                 |> sortClause (query @Student)
                 |> fetch
 
@@ -111,6 +141,13 @@ instance Controller StudentsController where
         let pageIndex'' = case pageIndex' of
                 Nothing -> 1
                 (Just n) -> n
+
+
+
+
+
+
+
 
         -- let ls = createPaginatedList students pageIndex' 4
         
