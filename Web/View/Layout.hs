@@ -20,6 +20,35 @@ defaultLayout inner = H.docTypeHtml ! A.lang "en" $ [hsx|
     <title>App</title>
 </head>
 <body>
+
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" href="/Index">Contoso University</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+
+                        <li>
+                            <a class="nav-link text-dark" href={StudentsAction Nothing Nothing Nothing Nothing}>
+                                Students
+                            </a>
+
+                            <a class="nav-link text-dark" href={InstructorsAction}>
+                                Instructors
+                            </a>
+                            
+                        </li>
+                        
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
     <div class="container mt-4">
         {renderFlashMessages}
         {inner}
