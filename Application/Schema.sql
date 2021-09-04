@@ -5,3 +5,9 @@ CREATE TABLE students (
     first_mid_name TEXT NOT NULL,
     enrollment_date DATE NOT NULL
 );
+CREATE TABLE instructors (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
+    last_name TEXT NOT NULL,
+    first_mid_name TEXT NOT NULL,
+    hire_date DATE NOT NULL
+);

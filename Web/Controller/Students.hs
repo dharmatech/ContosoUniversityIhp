@@ -50,54 +50,63 @@ instance Controller StudentsController where
         --                 Nothing -> queryBuilder |> orderByAsc #lastName |> fetch
         --                 _ -> queryBuilder |> orderByAsc #lastName |> fetch
 
-        students <- case searchString' of
-
-            Nothing -> query @Student 
-                |> (case sortOrder of
-                        (Just "NameAsc") -> orderByAsc #lastName
-                        (Just "NameDsc") -> orderByDesc #lastName
-                        (Just "DateAsc") -> orderByAsc  #enrollmentDate
-                        (Just "DateDsc") -> orderByDesc #enrollmentDate
-                        Nothing -> orderByAsc #lastName
-                        _ -> orderByAsc #lastName)
-                |> fetch
-
-            (Just str) -> query @Student 
-                |> queryOr
-                    (filterWhereILike (#lastName, "%" <> str <> "%"))
-                    (filterWhereILike (#firstMidName, "%" <> str <> "%"))
-                |> (case sortOrder of
-                        (Just "NameAsc") -> orderByAsc #lastName
-                        (Just "NameDsc") -> orderByDesc #lastName
-                        (Just "DateAsc") -> orderByAsc  #enrollmentDate
-                        (Just "DateDsc") -> orderByDesc #enrollmentDate
-                        Nothing -> orderByAsc #lastName
-                        _ -> orderByAsc #lastName)
-                |> fetch    
 
 
 
-
-        -- let sortClause q = (case sortOrder of
-        --                     (Just "NameAsc") -> orderByAsc #lastName
-        --                     (Just "NameDsc") -> orderByDesc #lastName
-        --                     (Just "DateAsc") -> orderByAsc  #enrollmentDate
-        --                     (Just "DateDsc") -> orderByDesc #enrollmentDate
-        --                     Nothing -> orderByAsc #lastName
-        --                     _ -> orderByAsc #lastName)                
 
         -- students <- case searchString' of
 
         --     Nothing -> query @Student 
-        --         |> sortClause (query @Student)
+        --         |> (case sortOrder of
+        --                 (Just "NameAsc") -> orderByAsc #lastName
+        --                 (Just "NameDsc") -> orderByDesc #lastName
+        --                 (Just "DateAsc") -> orderByAsc  #enrollmentDate
+        --                 (Just "DateDsc") -> orderByDesc #enrollmentDate
+        --                 Nothing -> orderByAsc #lastName
+        --                 _ -> orderByAsc #lastName)
         --         |> fetch
 
         --     (Just str) -> query @Student 
         --         |> queryOr
         --             (filterWhereILike (#lastName, "%" <> str <> "%"))
         --             (filterWhereILike (#firstMidName, "%" <> str <> "%"))
-        --         |> sortClause (query @Student)
+        --         |> (case sortOrder of
+        --                 (Just "NameAsc") -> orderByAsc #lastName
+        --                 (Just "NameDsc") -> orderByDesc #lastName
+        --                 (Just "DateAsc") -> orderByAsc  #enrollmentDate
+        --                 (Just "DateDsc") -> orderByDesc #enrollmentDate
+        --                 Nothing -> orderByAsc #lastName
+        --                 _ -> orderByAsc #lastName)
         --         |> fetch    
+
+
+        -- let queryA = query @Student |> queryOr (filterWhereILike (#lastName, "%")) (filterWhereILike (#firstMidName, "%"))
+
+        -- let queryB = query @Student |> queryOr (filterWhereILike (#lastName, "%" <> "abc" <> "%")) (filterWhereILike (#firstMidName, "%" <> "xyz" <> "%"))
+
+        let sortClause q = (case sortOrder of
+                            (Just "NameAsc") -> orderByAsc #lastName
+                            (Just "NameDsc") -> orderByDesc #lastName
+                            (Just "DateAsc") -> orderByAsc  #enrollmentDate
+                            (Just "DateDsc") -> orderByDesc #enrollmentDate
+                            Nothing -> orderByAsc #lastName
+                            _ -> orderByAsc #lastName)                
+
+        students <- case searchString' of
+
+            Nothing -> query @Student 
+                |> queryOr
+                    (filterWhereILike (#lastName, "%"))
+                    (filterWhereILike (#firstMidName, "%"))
+                |> sortClause (query @Student)
+                |> fetch
+
+            (Just str) -> query @Student 
+                |> queryOr
+                    (filterWhereILike (#lastName, "%" <> str <> "%"))
+                    (filterWhereILike (#firstMidName, "%" <> str <> "%"))
+                |> sortClause (query @Student)
+                |> fetch    
 
         let pageIndex'' = case pageIndex' of
                 Nothing -> 1

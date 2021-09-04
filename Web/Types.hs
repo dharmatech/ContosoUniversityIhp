@@ -20,3 +20,13 @@ data StudentsController
     | UpdateStudentAction { studentId :: !(Id Student) }
     | DeleteStudentAction { studentId :: !(Id Student) }
     deriving (Eq, Show, Data)
+
+data InstructorsController
+    = InstructorsAction
+    | NewInstructorAction
+    | ShowInstructorAction { instructorId :: !(Id Instructor) }
+    | CreateInstructorAction
+    | EditInstructorAction { instructorId :: !(Id Instructor) }
+    | UpdateInstructorAction { instructorId :: !(Id Instructor) }
+    | DeleteInstructorAction { instructorId :: !(Id Instructor) }
+    deriving (Eq, Show, Data)
