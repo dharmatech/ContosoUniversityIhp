@@ -13,11 +13,18 @@ instance Controller InstructorsController where
 
     action NewInstructorAction = do
         let instructor = newRecord
+        -- let officeAssignment = newRecord :: OfficeAssignment
+        -- let instructor' = set #officeAssignments instructor officeAssignment
         render NewView { .. }
+
+    -- action ShowInstructorAction { instructorId } = do
+    --     instructor <- fetch instructorId
+    --     render ShowView { .. }
 
     action ShowInstructorAction { instructorId } = do
         instructor <- fetch instructorId
-        render ShowView { .. }
+            >>= fetchRelated #officeAssignments
+        render ShowView { .. }    
 
     action EditInstructorAction { instructorId } = do
         instructor <- fetch instructorId
@@ -36,6 +43,7 @@ instance Controller InstructorsController where
 
     action CreateInstructorAction = do
         let instructor = newRecord @Instructor
+        -- let assignment = newRecord @OfficeAssignment 
         instructor
             |> buildInstructor
             |> ifValid \case
