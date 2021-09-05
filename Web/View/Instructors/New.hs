@@ -20,5 +20,13 @@ renderForm instructor = formFor instructor [hsx|
     {(textField #lastName)}
     {(textField #firstMidName)}
     {(textField #hireDate)}
+    <!-- {(textField #officeAssignments)} -->
+
+    <div class="form-group" id="form-group-instructor_officeAssignment">
+        <label class for="instructor_officeAssignment">Office Assignment</label>
+        <!-- <input type="text" name="officeAssignment" placeholder id="instructor_officeAssignment" class="form-control"> -->
+        <input type="text" name="location" placeholder id="instructor_officeAssignment" class="form-control">
+    </div>
+
     {submitButton}
 |]

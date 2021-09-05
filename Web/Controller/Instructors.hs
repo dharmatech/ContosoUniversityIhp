@@ -43,14 +43,23 @@ instance Controller InstructorsController where
 
     action CreateInstructorAction = do
         let instructor = newRecord @Instructor
-        -- let assignment = newRecord @OfficeAssignment 
+        let assignment = newRecord @OfficeAssignment
+        
+        let assignment' = assignment |> fill @'["location"]
+
         instructor
             |> buildInstructor
+
             |> ifValid \case
                 Left instructor -> render NewView { .. } 
                 Right instructor -> do
                     instructor <- instructor |> createRecord
                     setSuccessMessage "Instructor created"
+
+                    -- let assignment'' = set #instructorId assignment' (get #id instructor)
+
+                    -- assignment'' |> createRecord
+           
                     redirectTo InstructorsAction
 
     action DeleteInstructorAction { instructorId } = do
