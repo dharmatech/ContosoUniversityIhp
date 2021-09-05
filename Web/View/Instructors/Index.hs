@@ -15,9 +15,9 @@ instance View IndexView where
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Instructor</th>
-                        <th></th>
-                        <th></th>
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Hire Date</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -30,7 +30,10 @@ instance View IndexView where
 renderInstructor :: Instructor -> Html
 renderInstructor instructor = [hsx|
     <tr>
-        <td>{instructor}</td>
+        <td>{get #lastName instructor}</td>
+        <td>{get #firstMidName instructor}</td>
+        <td>{get #hireDate instructor}</td>
+        
         <td><a href={ShowInstructorAction (get #id instructor)}>Show</a></td>
         <td><a href={EditInstructorAction (get #id instructor)} class="text-muted">Edit</a></td>
         <td><a href={DeleteInstructorAction (get #id instructor)} class="js-delete text-muted">Delete</a></td>
