@@ -19,9 +19,17 @@ ALTER TABLE public.instructors DISABLE TRIGGER ALL;
 INSERT INTO public.instructors (id, last_name, first_mid_name, hire_date) VALUES ('c7e7a324-e9ad-415e-b27b-e0adcf35f2b1', 'Curry', 'Haskell', '1920-01-01');
 INSERT INTO public.instructors (id, last_name, first_mid_name, hire_date) VALUES ('01f51f0a-e7c8-4ad6-93c0-05a937e54393', 'Church', 'Alonzo', '1930-01-01');
 INSERT INTO public.instructors (id, last_name, first_mid_name, hire_date) VALUES ('362d6021-3871-415b-951d-22c20b0b2f93', 'Backus', 'John', '1940-01-01');
+INSERT INTO public.instructors (id, last_name, first_mid_name, hire_date) VALUES ('7d846cfa-921b-47ea-a16e-9851ddf3de01', 'Hindley', 'J. Roger', '1858-11-17');
 
 
 ALTER TABLE public.instructors ENABLE TRIGGER ALL;
+
+
+ALTER TABLE public.office_assignments DISABLE TRIGGER ALL;
+
+
+
+ALTER TABLE public.office_assignments ENABLE TRIGGER ALL;
 
 
 ALTER TABLE public.students DISABLE TRIGGER ALL;
